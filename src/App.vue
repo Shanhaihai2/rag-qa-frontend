@@ -2,24 +2,40 @@
 import { ref } from 'vue'
 import ChatMessage from './components/ChatMessage.vue'
 import ChatInput from './components/ChatInput.vue'
+import { askRag } from './api.js'   // 导入 RAG 接口
 
-// 消息列表
 const messages = ref([
   { role: 'ai', content: '你好！我是知识库问答助手，请问有什么可以帮你的？' }
 ])
 
-// 接收子组件发来的用户输入
-function handleSend(text) {
-  // 添加用户消息
+const isLoading = ref(false)        // 加载状态
+
+async function handleSend(text) {
+  // 1. 添加用户消息
   messages.value.push({ role: 'user', content: text })
 
-  // 模拟 AI 回复（明天换成真实 API 调用）
-  setTimeout(() => {
+  // 2. 显示加载提示
+  isLoading.value = true
+  messages.value.push({ role: 'ai', content: '正在思考中...', loading: true })
+
+  try {
+    // 3. 调用真实 RAG 接口
+    const response = await askRag(text)
+    const answer = response.data.answer || '没有收到有效回答'
+
+    // 4. 移除加载提示，添加真实回答
+    messages.value = messages.value.filter(msg => !msg.loading)
+    messages.value.push({ role: 'ai', content: answer })
+  } catch (error) {
+    // 5. 错误处理
+    messages.value = messages.value.filter(msg => !msg.loading)
     messages.value.push({
       role: 'ai',
-      content: `这是关于「${text}」的模拟回复。明天将接入真实 RAG 接口。`
+      content: `请求失败：${error.message}。请确保后端服务已启动。`
     })
-  }, 500)
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
