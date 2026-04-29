@@ -12,7 +12,7 @@ const isLoading = ref(false)
 const chatStore = useChatStore()
 
 async function handleSend(text) {
-  messages.value.push({ role: 'user', content: text })
+  messages.value.push({ role: 'user', content: text ,time: new Date().toLocaleTimeString()})
   isLoading.value = true
   messages.value.push({ role: 'ai', content: '正在查询数据库...', loading: true })
 
@@ -22,7 +22,7 @@ async function handleSend(text) {
     // 成功拿到 answer 后追加：
     chatStore.addRecord('Text2SQL', text, answer)
     messages.value = messages.value.filter(msg => !msg.loading)
-    messages.value.push({ role: 'ai', content: answer })
+    messages.value.push({ role: 'ai', content: answer ,time: new Date().toLocaleTimeString()})
   } catch (error) {
     messages.value = messages.value.filter(msg => !msg.loading)
     messages.value.push({
