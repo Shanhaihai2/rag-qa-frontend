@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
 
 const emit = defineEmits(['send'])
 const inputText = ref('')
@@ -11,11 +12,41 @@ function sendMessage() {
     inputText.value = ''
   }
 }
+
+const selectedFile = ref(null)
+
+function handleFileChange(event) {
+  selectedFile.value = event.target.files[0]
+  if (selectedFile.value) {
+    uploadFile()
+  }
+}
+
+async function uploadFile() {
+  if (!selectedFile.value) return
+  
+  const formData = new FormData()
+  formData.append('file', selectedFile.value)
+
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/upload-pdf', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    // 可以在这里给用户一个成功提示
+    console.log(response.data.message)
+  } catch (error) {
+    console.error('上传失败:', error)
+    // 可以在这里给用户一个错误提示
+  }
+}
 </script>
 
 <template>
+  
   <div class="input-wrapper">
     <div class="input-container">
+      <input type="file" accept=".pdf" @change="handleFileChange" style="display: none;" ref="fileInput" />
+    <button @click="$refs.fileInput.click()" class="upload-btn">📎 上传PDF</button>
       <input
         v-model="inputText"
         @keyup.enter="sendMessage"
