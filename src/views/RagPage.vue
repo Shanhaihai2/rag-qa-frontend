@@ -18,7 +18,7 @@ async function handleSend(text) {
 
   try {
     const response = await askRag(text)
-    const answer = response.data.answer || '没有收到有效回答'
+    const answer = response.data?.data?.answer || '没有收到有效回答'
     // 在 try 块中，成功拿到 answer 后追加：
     chatStore.addRecord('RAG', text, answer)
     messages.value = messages.value.filter(msg => !msg.loading)

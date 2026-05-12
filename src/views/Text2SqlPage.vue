@@ -18,7 +18,7 @@ async function handleSend(text) {
 
   try {
     const response = await askText2SQL(text)
-    const answer = response.data.answer || '没有收到有效回答'
+    const answer = response.data.data.answer || '没有收到有效回答'
     // 成功拿到 answer 后追加：
     chatStore.addRecord('Text2SQL', text, answer)
     messages.value = messages.value.filter(msg => !msg.loading)
