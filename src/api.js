@@ -12,8 +12,8 @@ const apiClient = axios.create({
 /**
  * RAG 知识库问答
  */
-export function askRag(question) {
-  return apiClient.post('/rag/qa', { question })
+export function askRag(question,history = '') {
+  return apiClient.post('/rag/qa', { question , history })
 }
 
 /**

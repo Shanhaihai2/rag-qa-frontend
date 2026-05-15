@@ -17,7 +17,9 @@ async function handleSend(text) {
   messages.value.push({ role: 'ai', content: '正在思考中...', loading: true })
 
   try {
-    const response = await askRag(text)
+    const historyMessages = messages.value.slice(-6) // 取最近 3 轮（用户+AI共6条）
+    const historyStr = historyMessages.map(msg => (msg.role === 'user' ? '用户: ' : 'AI: ') + msg.content).join('\n')
+    const response = await askRag(text,historyStr)
     const answer = response.data?.data?.answer || '没有收到有效回答'
     // 在 try 块中，成功拿到 answer 后追加：
     chatStore.addRecord('RAG', text, answer)
