@@ -4,6 +4,7 @@
       <div class="nav-brand">🤖 智能知识库系统</div>
       <div class="nav-links">
         <router-link to="/">首页</router-link>
+        <router-link to="/agent">🤖 Agent 助手</router-link>
         <router-link to="/rag">RAG 问答</router-link>
         <router-link to="/text2sql">Text2SQL 问数</router-link>
       </div>

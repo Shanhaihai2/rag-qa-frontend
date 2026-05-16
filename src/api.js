@@ -7,8 +7,9 @@ const BASE_URL = 'http://127.0.0.1:8000'
 const apiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 60000  // RAG 问答可能耗时较长，设 60 秒
+  
 })
-
+export default apiClient;
 /**
  * RAG 知识库问答
  */
